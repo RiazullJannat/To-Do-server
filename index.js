@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 const app = express();
 app.use(express.json())
@@ -40,6 +40,23 @@ async function run() {
             const data = req.body;
             console.log(data);
             const result = await toDoCollection.insertOne(data)
+            res.send(result)
+        })
+        app.patch('/update-todo', async (req, res) => {
+            const data = req.body;
+            const { id } = req.query;
+            const filter = {_id: new ObjectId(id)}
+            const updatedDoc = {
+                $set:{
+                    ...data
+                }
+            }
+            const result = await toDoCollection.updateOne(filter, updatedDoc)
+            res.send(result)
+        })
+        app.get('/to-do-list', async (req, res) => {
+            const { email } = req.query
+            const result = await toDoCollection.find({ userEmail: email }).toArray();
             res.send(result)
         })
     } finally {
