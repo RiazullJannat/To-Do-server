@@ -54,6 +54,11 @@ async function run() {
             const result = await toDoCollection.updateOne(filter, updatedDoc)
             res.send(result)
         })
+        app.delete('/delete',async (req,res)=>{
+            const {id} = req.query;
+            const result = await toDoCollection.deleteOne({_id: new ObjectId(id)})
+            res.send(result)
+        })
         app.get('/to-do-list', async (req, res) => {
             const { email } = req.query
             const result = await toDoCollection.find({ userEmail: email }).toArray();
