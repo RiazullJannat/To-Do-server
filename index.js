@@ -27,6 +27,9 @@ async function run() {
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
         const usersCollection = client.db('to-do').collection("users");
         const toDoCollection = client.db('to-do').collection("toDo");
+        app.get('/', (req,res)=>{
+            res.send('server is running....')
+        })
         app.post('/register', async (req, res) => {
             const data = req.body;
             const isExist = await usersCollection.findOne({ email: data.email });
